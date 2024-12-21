@@ -220,7 +220,7 @@ function updatePageContent() {
     document.querySelector('.chat-header h5').textContent = t.liveSupport;
 }
 
-// Örnek oyun verileri
+//  oyun verileri
 const games = [
     {
         id: 1,
@@ -598,7 +598,7 @@ function displayGames(filteredGames = games) {
         
         const gameCard = `
             <div class="col-md-4 mb-4 fade-in">
-                <div class="card h-100">
+                <div class="card h-100" data-game-id="${game.id}">
                     <img src="${game.image}" class="card-img-top" alt="${game.name}">
                     <div class="card-body">
                         <h5 class="card-title">${game.name}</h5>
@@ -642,6 +642,9 @@ function displayGames(filteredGames = games) {
         `;
         gamesContainer.innerHTML += gameCard;
     });
+
+    // Kartları tıklanabilir yap
+    makeGameCardsClickable();
 }
 
 // Yıldız puanlama oluşturma fonksiyonu
@@ -669,7 +672,7 @@ function generateStarRating(rating) {
     return stars;
 }
 
-// Sayıyı formatla (1000 -> 1K, 1000000 -> 1M gibi)
+// Sayıyı formatla 
 function formatNumber(num) {
     if (num >= 1000000) {
         return (num / 1000000).toFixed(1) + 'M';
@@ -732,6 +735,9 @@ function addToCart(gameId) {
     
     cartItems.innerHTML += cartItem;
     updateCartTotal();
+
+    // Toast bildirimi göster
+    showToast(`${game.name} sepete eklendi!`, 'success');
 }
 
 // Sepet toplamını güncelleme fonksiyonu güncelleniyor
@@ -865,7 +871,7 @@ function createParticle() {
     particle.style.left = `${startPositionX}px`;
     particle.style.bottom = '-50px';
     
-    // Rastgele animasyon süresi (4-8 saniye arası)
+    // Rastgele animasyon süresi 
     const animationDuration = Math.random() * 4 + 4;
     particle.style.animation = `float ${animationDuration}s linear`;
     
@@ -903,7 +909,7 @@ function changeColorTheme() {
     const currentTheme = getComputedStyle(body).backgroundImage;
     let nextThemeIndex = 0;
     
-    // Mevcut temayı bul ve bir sonrakine geç
+    // Mevcut temayı bul 
     themes.forEach((theme, index) => {
         if (currentTheme.includes(theme[0])) {
             nextThemeIndex = (index + 1) % themes.length;
@@ -915,7 +921,7 @@ function changeColorTheme() {
     body.style.backgroundSize = '400% 400%';
 }
 
-// Tema değiştirme butonunu navbar'a ekle
+// Tema değiştirme butonunu navbar
 document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.querySelector('.navbar .container');
     const themeButton = document.createElement('button');
@@ -925,7 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navbar.appendChild(themeButton);
 });
 
-// İndirim kodları listesi
+// İndirim kodları 
 const validCoupons = {
     'KISBAHARA': 25, // %25 indirim
     'OYUNSEVER': 15, // %15 indirim
@@ -936,7 +942,7 @@ const validCoupons = {
 let currentDiscount = 0;
 let appliedCoupon = null;
 
-// İndirim kodunu uygulama fonksiyonu
+// İndirim kodunu uygulama 
 function applyCoupon() {
     const couponInput = document.getElementById('couponInput');
     const couponMessage = document.getElementById('couponMessage');
@@ -960,7 +966,7 @@ function applyCoupon() {
     }
 }
 
-// Sepetten ürün kaldırma fonksiyonunu güncelliyoruz
+// Sepetten ürün kaldırma fonksiyonunu 
 function removeFromCart(element) {
     element.closest('.cart-item').remove();
     updateCartCount();
@@ -976,7 +982,7 @@ function removeFromCart(element) {
     }
 }
 
-// Checkout fonksiyonunu güncelliyoruz
+// Checkout fonksiyonunu 
 function checkout() {
     const cartItems = document.querySelectorAll('.cart-item');
     if (cartItems.length === 0) {
@@ -1002,3 +1008,342 @@ function checkout() {
     updateCartCount();
     updateCartTotal();
 }
+
+// Gelişmiş filtreleme sistemi
+function addFilterSystem() {
+    const gamesSection = document.getElementById('games');
+    const filterDiv = document.createElement('div');
+    filterDiv.className = 'container mb-3';
+    filterDiv.innerHTML = `
+        <div class="row g-2 align-items-center justify-content-between">
+            <div class="col-auto" style="width: 180px;">
+                <select class="form-select form-select-sm shadow-sm" id="priceFilter">
+                    <option value="">Fiyat Aralığı</option>
+                    <option value="0-100">0-100 TL</option>
+                    <option value="100-300">100-300 TL</option>
+                    <option value="300-500">300-500 TL</option>
+                    <option value="500+">500+ TL</option>
+                </select>
+            </div>
+            <div class="col-auto" style="width: 180px;">
+                <select class="form-select form-select-sm shadow-sm" id="discountFilter">
+                    <option value="">İndirim Oranı</option>
+                    <option value="10">%10 ve üzeri</option>
+                    <option value="25">%25 ve üzeri</option>
+                    <option value="50">%50 ve üzeri</option>
+                </select>
+            </div>
+            <div class="col-auto" style="width: 180px;">
+                <select class="form-select form-select-sm shadow-sm" id="ratingFilter">
+                    <option value="">Puan</option>
+                    <option value="4.5">4.5 ve üzeri</option>
+                    <option value="4.0">4.0 ve üzeri</option>
+                    <option value="3.5">3.5 ve üzeri</option>
+                </select>
+            </div>
+            <div class="col-auto" style="width: 180px;">
+                <select class="form-select form-select-sm shadow-sm" onchange="sortGames(this.value)">
+                    <option value="">Sırala</option>
+                    <option value="price-asc">Fiyat (En Düşük)</option>
+                    <option value="price-desc">Fiyat (En Yüksek)</option>
+                    <option value="rating-desc">Puan (En Yüksek)</option>
+                    <option value="discount-desc">İndirim (En Yüksek)</option>
+                    <option value="name-asc">İsim (A-Z)</option>
+                    <option value="name-desc">İsim (Z-A)</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary btn-sm px-4 shadow-sm" 
+                    style="background: linear-gradient(45deg, #00dbde, #fc00ff); border: none;" 
+                    onclick="applyFilters()">
+                    <i class="fas fa-filter me-1"></i> Filtrele
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Stil eklemeleri
+    const style = document.createElement('style');
+    style.textContent = `
+        .form-select-sm {
+            height: 35px;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.9);
+        }
+        .form-select-sm:focus {
+            border-color: #00dbde;
+            box-shadow: 0 0 0 0.2rem rgba(0, 219, 222, 0.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    `;
+    document.head.appendChild(style);
+    
+    gamesSection.insertBefore(filterDiv, gamesSection.firstChild);
+}
+
+// Filtreleri uygula
+function applyFilters() {
+    let filteredGames = [...games];
+    
+    // Fiyat filtresi
+    const priceFilter = document.getElementById('priceFilter').value;
+    if (priceFilter) {
+        const [min, max] = priceFilter.split('-').map(Number);
+        filteredGames = filteredGames.filter(game => {
+            const price = game.price * (1 - game.discount / 100);
+            if (max) {
+                return price >= min && price <= max;
+            } else {
+                return price >= min;
+            }
+        });
+    }
+    
+    // İndirim filtresi
+    const discountFilter = document.getElementById('discountFilter').value;
+    if (discountFilter) {
+        filteredGames = filteredGames.filter(game => 
+            game.discount >= Number(discountFilter)
+        );
+    }
+    
+    // Puan filtresi
+    const ratingFilter = document.getElementById('ratingFilter').value;
+    if (ratingFilter) {
+        filteredGames = filteredGames.filter(game => 
+            game.rating >= Number(ratingFilter)
+        );
+    }
+    
+    displayGames(filteredGames);
+}
+
+// Oyun detaylarını göster
+function showGameDetails(gameId) {
+    const game = games.find(g => g.id === gameId);
+    if (!game) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'gameDetailModal';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${game.name}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="${game.image}" class="img-fluid rounded" alt="${game.name}">
+                            <div class="mt-3">
+                                <h6>Oyun Detayları:</h6>
+                                <p>Kategori: ${game.category}</p>
+                                <p>Çıkış Tarihi: ${game.releaseDate}</p>
+                                <p>Puan: ${game.rating} / 5.0</p>
+                                <p>Satın Alan: ${formatNumber(game.purchases)} kişi</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="price-section mb-3">
+                                ${game.discount > 0 ? 
+                                    `<h3 class="text-danger">
+                                        <del class="text-muted">${game.price.toFixed(2)} TL</del>
+                                        ${(game.price * (1 - game.discount/100)).toFixed(2)} TL
+                                    </h3>` : 
+                                    `<h3>${game.price.toFixed(2)} TL</h3>`
+                                }
+                                ${game.discount > 0 ? 
+                                    `<span class="badge bg-danger">%${game.discount} İndirim</span>` : 
+                                    ''
+                                }
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-primary w-100 mb-2" onclick="addToCart(${game.id})">
+                                    <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                                </button>
+                                <button class="btn btn-outline-primary w-100" onclick="watchTrailer('${game.trailer}')">
+                                    <i class="fas fa-play"></i> Fragmanı İzle
+                                </button>
+                            </div>
+                            <div class="reviews mt-4">
+                                <h6>Oyuncu Yorumları:</h6>
+                                <div class="review-list">
+                                    <!-- Yorumlar dinamik olarak eklenecek -->
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="showReviewForm(${game.id})">
+                                    Yorum Yap
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    new bootstrap.Modal(modal).show();
+    
+    modal.addEventListener('hidden.bs.modal', () => {
+        modal.remove();
+    });
+}
+
+// Oyun kartlarına tıklama olayı ekle
+function makeGameCardsClickable() {
+    const gameCards = document.querySelectorAll('.card');
+    gameCards.forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.btn')) {
+                const gameId = parseInt(card.getAttribute('data-game-id'));
+                showGameDetails(gameId);
+            }
+        });
+    });
+}
+
+// İstatistik kartları ekle
+function addGameStats() {
+    const statsSection = document.createElement('section');
+    statsSection.className = 'container my-4';
+    statsSection.innerHTML = `
+        <h2 class="text-center mb-3" style="font-size: 1.5rem;">Oyun İstatistikleri</h2>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="mb-1">Toplam Oyun</h6>
+                        <h4 class="mb-0">${games.length}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="mb-1">İndirimli Oyunlar</h6>
+                        <h4 class="mb-0">${games.filter(g => g.discount > 0).length}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="mb-1">En Yüksek Puan</h6>
+                        <h4 class="mb-0">${Math.max(...games.map(g => g.rating)).toFixed(1)}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body p-2">
+                        <h6 class="mb-1">Toplam Satış</h6>
+                        <h4 class="mb-0">${formatNumber(games.reduce((sum, g) => sum + g.purchases, 0))}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const gamesSection = document.getElementById('games');
+    gamesSection.parentNode.insertBefore(statsSection, gamesSection);
+}
+
+// Sayfa yüklendiğinde sistemleri ekle
+document.addEventListener('DOMContentLoaded', () => {
+    displayGames();
+    addFilterSystem();
+    addGameStats();
+});
+
+// Toast container'ı oluştur (script.js başına ekleyin)
+document.addEventListener('DOMContentLoaded', () => {
+    if (!document.querySelector('.toast-container')) {
+        const toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        document.body.insertBefore(toastContainer, document.body.firstChild);
+    }
+});
+
+// Toast bildirimi gösterme fonksiyonu
+function showToast(message, type = 'success') {
+    const toastContainer = document.querySelector('.toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+    `;
+    
+    toastContainer.appendChild(toast);
+
+    // Animasyon tamamlandıktan sonra toast'u kaldır
+    setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.5s ease forwards';
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, 2500);
+}
+
+// Ziyaretçi sayacı için fonksiyonlar
+const VISITOR_KEY = 'totalVisitors';
+const LAST_VISIT_KEY = 'lastVisit';
+
+function updateVisitorCount() {
+    // Mevcut toplam ziyaretçi sayısını al
+    let totalVisitors = parseInt(localStorage.getItem(VISITOR_KEY)) || 0;
+    const lastVisit = localStorage.getItem(LAST_VISIT_KEY);
+    const now = new Date().toDateString();
+
+    // Eğer son ziyaret bugün değilse sayacı artır
+    if (lastVisit !== now) {
+        totalVisitors++;
+        localStorage.setItem(VISITOR_KEY, totalVisitors);
+        localStorage.setItem(LAST_VISIT_KEY, now);
+        
+        // Ziyaretçi animasyonu
+        animateVisitorCount(totalVisitors);
+    } else {
+        // Animasyonsuz güncelleme
+        document.getElementById('visitorCount').textContent = totalVisitors;
+    }
+}
+
+function animateVisitorCount(targetCount) {
+    const counterElement = document.getElementById('visitorCount');
+    const duration = 1000; // 1 saniye
+    const steps = 20;
+    const stepDuration = duration / steps;
+    let currentCount = 0;
+
+    const interval = setInterval(() => {
+        currentCount++;
+        counterElement.textContent = currentCount;
+        
+        if (currentCount >= targetCount) {
+            clearInterval(interval);
+        }
+    }, stepDuration);
+}
+
+// Sayfa yüklendiğinde sayacı güncelle
+document.addEventListener('DOMContentLoaded', () => {
+    updateVisitorCount();
+    
+    // Sayaca hover efekti ekle
+    const visitorBadge = document.getElementById('visitorCount');
+    visitorBadge.addEventListener('mouseover', () => {
+        visitorBadge.style.transform = 'scale(1.1)';
+    });
+    visitorBadge.addEventListener('mouseout', () => {
+        visitorBadge.style.transform = 'scale(1)';
+    });
+});

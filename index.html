@@ -12,6 +12,9 @@
 </head>
 
 <body>
+    <!-- Toast container'ı body'nin başına ekleyin -->
+    <div class="toast-container"></div>
+    
     <!-- Parçacıklar için container -->
     <div class="particles-container" id="particles-container"></div>
     
@@ -49,6 +52,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#new">Yeni Çıkanlar</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <span class="nav-link">
+                            <i class="fas fa-users"></i> Ziyaretçi: <span id="visitorCount" class="badge bg-light text-dark">0</span>
+                        </span>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center">

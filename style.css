@@ -638,3 +638,78 @@ section h2::after {
     align-items: center;
     justify-content: center;
 }
+
+/* Toast bildirimi için stiller */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1060;
+    pointer-events: none;
+}
+
+.toast-notification {
+    background: linear-gradient(45deg, #00dbde, #fc00ff);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.5s ease forwards;
+    opacity: 0;
+    min-width: 300px;
+    text-align: center;
+    justify-content: center;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.toast-notification i {
+    font-size: 1.2rem;
+}
+
+/* Ziyaretçi sayacı stilleri */
+#visitorCount {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    min-width: 30px;
+    text-align: center;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white !important;
+}
+
+.nav-item .nav-link i.fa-users {
+    color: #ff6b6b;
+    margin-right: 5px;
+}
+
+/* Sayaç animasyonu */
+@keyframes countUp {
+    from {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.count-animation {
+    animation: countUp 0.5s ease-out;
+}
