@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore - Dijital Oyun Mağazası</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="GameStore - En iyi dijital oyunlar için online mağazanız. PC, konsol ve mobil oyunları uygun fiyatlarla satın alın.">
+    <meta name="keywords" content="oyun, dijital oyun, pc oyunları, konsol oyunları, video oyunları, oyun mağazası">
+</head>
+
+<body>
+    <!-- Parçacıklar için container -->
+    <div class="particles-container" id="particles-container"></div>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">GameStore</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Ana Sayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#games">Oyunlar</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button">
+                            Kategoriler
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('Aksiyon')">Aksiyon</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('RPG')">RPG</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('Spor')">Spor</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('Strateji')">Strateji</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('Macera')">Macera</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="filterGames('all')">Tümü</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#featured">Öne Çıkanlar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#new">Yeni Çıkanlar</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <!-- Language Selector -->
+                    <div class="dropdown me-3">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button">
+                            <i class="fas fa-globe"></i> TR
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="changeLanguage('tr')"><img src="https://flagcdn.com/w20/tr.png" alt="TR"> Türkçe</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="changeLanguage('en')"><img src="https://flagcdn.com/w20/gb.png" alt="EN"> English</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="changeLanguage('de')"><img src="https://flagcdn.com/w20/de.png" alt="DE"> Deutsch</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="changeLanguage('fr')"><img src="https://flagcdn.com/w20/fr.png" alt="FR"> Français</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="changeLanguage('es')"><img src="https://flagcdn.com/w20/es.png" alt="ES"> Español</a></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-outline-light me-2" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-sign-in-alt"></i> Giriş Yap
+                    </button>
+                    <button class="btn btn-primary me-3" type="button" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        <i class="fas fa-user-plus"></i> Üye Ol
+                    </button>
+                    <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                        <i class="fas fa-shopping-cart"></i> Sepet (<span id="cart-count">0</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+ <!-- Hero Section -->
+    <div class="hero-section text-center py-5">
+        <div class="container">
+            <h1>En İyi Dijital Oyunlar</h1>
+            <p class="lead">Yüzlerce oyun, en uygun fiyatlarla!</p>
+        </div>
+    </div>
+
+  <!-- Side Discount Banner -->
+  <div class="side-discount-banner">
+    <div class="discount-content">
+        <span class="discount-text">BÜYÜK KIŞ<br>İNDİRİMİ!</span>
+        <span class="discount-amount">%50'ye<br>Varan<br>İndirimler</span>
+        <span class="discount-timer" id="discountTimer">Süre dolmak<br>üzere!</span>
+    </div>
+</div>
+
+    <!-- Games Section -->
+    <section id="games" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Popüler Oyunlar</h2>
+            <div class="row" id="games-container">
+                <!-- Oyunlar JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="modal fade" id="trailerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Oyun Fragmanı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ratio ratio-16x9">
+                        <iframe id="trailerVideo" src="" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Giriş Yap</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">E-posta</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Şifre</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Beni Hatırla</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Üye Ol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm" onsubmit="return handleRegister(event)">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label">Ad Soyad</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label">E-posta</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Şifre</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPasswordConfirm" class="form-label">Şifre Tekrar</label>
+                            <input type="password" class="form-control" id="registerPasswordConfirm" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Üye Ol</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Alışveriş Sepeti</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="cart-items">
+                <!-- Sepet öğeleri JavaScript ile buraya eklenecek -->
+            </div>
+            
+            <!-- Indirim Kodu Bölümü -->
+            <div class="coupon-section mt-3">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="couponInput" placeholder="İndirim kodu girin">
+                    <button class="btn btn-outline-primary" type="button" onclick="applyCoupon()">Uygula</button>
+                </div>
+                <small id="couponMessage" class="text-muted"></small>
+            </div>
+
+            <div class="cart-summary mt-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Ara Toplam:</span>
+                    <span id="subtotal">0 TL</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>İndirim:</span>
+                    <span id="discount">0 TL</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong>Genel Toplam:</strong>
+                    <strong id="cart-total">0 TL</strong>
+                </div>
+                <button class="btn btn-success w-100" onclick="checkout()">Satın Al</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Support Button -->
+    <div class="live-support-button" onclick="toggleLiveSupport()">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <!-- Live Support Chat Window -->
+    <div class="live-support-chat" id="liveSupportChat">
+        <div class="chat-header">
+            <h5>Canlı Destek</h5>
+            <div class="chat-controls">
+                <button class="btn btn-minimize" onclick="minimizeChat()">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="btn btn-close" onclick="toggleLiveSupport()"></button>
+            </div>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message support">
+                    <div class="message-content">
+                        Merhaba! Size nasıl yardımcı olabilirim?
+                    </div>
+                    <div class="message-time">14:00</div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="messageInput" placeholder="Mesajınızı yazın..." class="form-control">
+            <button class="btn btn-primary" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+    <!-- Copyright Footer -->
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 Copyright: Enes Akmehmet</p>
+        </div>
+    </footer>
+</body>
+</html>

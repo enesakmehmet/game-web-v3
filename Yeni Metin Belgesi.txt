@@ -1,0 +1,5 @@
+Kullanıcılar şu indirim kodlarını kullanabilir
+KISBAHARA: %25 indirim
+OYUNSEVER: %15 indirim
+GAMESTORE50: %50 indirim
+HOSGELDIN10: %10 indirim
